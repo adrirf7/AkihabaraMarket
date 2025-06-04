@@ -1,0 +1,48 @@
+package com.akihabara.market.dao;
+import com.akihabara.market.dao.DatabaseConnection;
+import java.sql.Connection;
+import com.akihabara.market.dao.ProductoDAO;
+import java.util.List;
+import com.akihabara.market.model.ProductoOtaku;
+
+public class Main {
+
+	public static void main(String[] args) {
+		ProductoDAO dao = new ProductoDAO();
+		
+		//Agregar un producto
+		ProductoOtaku producto1 = new ProductoOtaku("Figura Naruto", "Figura", 49.99, 12);
+		dao.agregarProducto(producto1);
+		
+		//Obtener producto por ID
+		ProductoOtaku producto = dao.obtenerProductoPorId(producto1.getId());
+		if (producto != null) {
+			System.out.println("Producto obtenido: " + producto.getNombre());
+		}
+		
+        // Obtener todos los productos
+        List<ProductoOtaku> productos = dao.obtenerTodosLosProductos();
+        System.out.println("Total productos: " + productos.size());
+
+        // Buscar por nombre
+        List<ProductoOtaku> buscados = dao.buscarProductosPorNombre("Naruto");
+        System.out.println("Encontrados por nombre: " + buscados.size());
+
+        // Buscar por categoría
+        List<ProductoOtaku> porCategoria = dao.buscarProductoPorCategoria("Figura");
+        System.out.println("Encontrados por categoría: " + porCategoria.size());
+
+        // Actualizar producto
+        if (producto != null) {
+            producto.setPrecio(200.99);
+            boolean actualizado = dao.actualizarProducto(producto);
+            System.out.println("Producto actualizado: " + actualizado);
+        }
+
+        // Eliminar producto
+        boolean eliminado = dao.eliminarProducto(10); // Asegúrate de usar un ID válido
+        System.out.println("Producto eliminado: " + eliminado);
+	}
+	
+
+}

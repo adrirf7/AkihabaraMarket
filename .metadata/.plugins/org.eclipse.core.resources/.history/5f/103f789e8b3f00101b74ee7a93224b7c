@@ -1,0 +1,9 @@
+package com.akihabara.market.model;
+import com.akihabara.market.model.*;
+public class Main {
+
+	public static void main(String[] args) {
+		 ProductoOtaku producto = new ProductoOtaku(1, "Figura de Naruto", "Figura", 29.99, 15);
+	}
+
+}

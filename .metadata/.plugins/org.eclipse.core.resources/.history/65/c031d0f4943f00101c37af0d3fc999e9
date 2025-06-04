@@ -1,0 +1,54 @@
+package com.akihabara.market.dao;
+
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
+
+public class DatabaseConnection {
+
+    // 1. Constantes para la conexión: URL, usuario y contraseña
+    private static final String DB_URL = "jdbc:mysql://localhost:3306/akihabara_db"; 
+    private static final String USER = "userAkihabara";
+    private static final String PASSWORD = "userAkihabara";
+
+    // 2. Propiedad de conexión: almacena la conexión activa
+    private Connection conexion;
+
+    // 3. Constructor
+    public DatabaseConnection() {
+        try {
+            // Cargar el driver de MySQL para que Java pueda conectarse a la base de datos
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            System.out.println("Driver de MySQL cargado."); // Mensaje de éxito
+
+            // Establecer la conexión usando los datos definidos
+            conexion = DriverManager.getConnection(DB_URL, USER, PASSWORD);
+            System.out.println("Conexión exitosa"); // Mensaje de éxito si se conecta correctamente
+        } catch (ClassNotFoundException e) {
+            // Este error ocurre si el driver no está disponible en el classpath
+            System.out.println("Error al cargar el driver: " + e.getMessage());
+        } catch (SQLException e) {
+            // Este error ocurre si los datos de conexión son incorrectos o falla el servidor MySQL
+            System.out.println("Error al conectar con la base de datos: " + e.getMessage());
+        }
+    }
+
+    // 4. Método público para obtener el objeto de conexión (para usarlo en otras clases)
+    public Connection getConexion() {
+        return conexion;
+    }
+
+    // 5. Método público para cerrar la conexión cuando ya no se necesite
+    public void cerrarConexion() {
+        if (conexion != null) { // Solo intenta cerrar si la conexión existe
+            try {
+                conexion.close(); // Cierra la conexión
+                System.out.println("Conexión cerrada correctamente."); // Confirmación
+            } catch (SQLException e) {
+                // Error al cerrar la conexión (puede deberse a que ya estaba cerrada o mal gestionada)
+                System.out.println("Error al cerrar la conexión: " + e.getMessage());
+            }
+        }
+    }
+}

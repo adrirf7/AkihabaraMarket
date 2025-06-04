@@ -1,0 +1,19 @@
+package com.akihabara.market.dao;
+import com.akihabara.market.dao.DatabaseConnection;
+import java.sql.Connection;
+import com.akihabara.market.dao.ProductoDAO;
+import java.util.List;
+import com.akihabara.market.model.ProductoOtaku;
+
+public class Main {
+
+	public static void main(String[] args) {
+		ProductoDAO dao = new ProductoDAO();
+		
+		//Agregar un producto
+		ProductoOtaku producto1 = new ProductoOtaku("Figura Naruto", "Figura", 49.99, 12);
+		dao.agregarProducto(producto1);
+	}
+	
+
+}

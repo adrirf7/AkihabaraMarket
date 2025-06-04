@@ -1,0 +1,13 @@
+package com.akihabara.market.dao;
+import com.akihabara.market.dao.DatabaseConnection;
+import java.sql.Connection;
+import com.akihabara.market.dao.ProductoDAO;
+import java.util.List;
+
+public class Main {
+
+	public static void main(String[] args) {
+		ProductoDAO dao = new ProductoDAO();
+	}
+
+}

@@ -1,0 +1,32 @@
+package com.akihabara.market.dao;
+import com.akihabara.market.model.ProductoOtaku;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class ProductoDAO {
+    private DatabaseConnection dbConnection;
+    
+    public ProductoDAO() {
+    	dbConnection = new DatabaseConnection();
+    }
+    
+    public void agregarProducto(ProductoOtaku producto) {
+    	String consulta = "INSERT INTO productos(nombre, categoria, precio, stock) VALUES (?, ?, ?, ?)";
+    	
+    	try (Connection con = dbConnection.getConexion();
+    			PreparedStatement pstmt = con.prepareStatement(consulta)){
+    		
+    		pstmt.setString(1, producto.getNombre());
+    		pstmt.setString(2, producto.getCategoria());
+    		pstmt.setDouble(3, producto.getPrecio());
+    		pstmt.setInt(4, producto.getStock());
+    		
+    		pstmt.executeUpdate();
+    		System.out.println("Producto agregado correctamente.");
+    		
+    	} catch(SQLException e) {
+    		System.out.println();
+    	}
+    }
+}

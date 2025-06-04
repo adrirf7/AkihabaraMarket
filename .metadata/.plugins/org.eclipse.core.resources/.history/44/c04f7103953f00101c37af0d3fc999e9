@@ -1,0 +1,24 @@
+package com.akihabara.market.dao;
+import com.akihabara.market.dao.DatabaseConnection;
+import java.sql.Connection;
+
+public class Main {
+
+	public static void main(String[] args) {
+        // Crear una instancia de DatabaseConnection
+        DatabaseConnection dbConnection = new DatabaseConnection();
+
+        // Obtener la conexión y verificar si no es null
+        Connection conexion = dbConnection.getConexion();
+
+        if (conexion != null) {
+            System.out.println("La conexión a la base de datos se ha establecido correctamente.");
+        } else {
+            System.out.println("No se pudo establecer la conexión a la base de datos.");
+        }
+
+        // Cerrar la conexión
+        dbConnection.cerrarConexion();
+	}
+
+}
