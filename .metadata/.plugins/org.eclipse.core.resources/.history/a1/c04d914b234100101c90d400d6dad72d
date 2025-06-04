@@ -1,0 +1,10 @@
+package com.akihabara.market.main;
+
+public class Main {
+
+	public static void main(String[] args) {
+        AkihabaraController controlador = new AkihabaraController();
+        controlador.iniciar();
+	}
+
+}

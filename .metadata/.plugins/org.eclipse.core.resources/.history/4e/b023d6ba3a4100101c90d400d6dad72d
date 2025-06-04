@@ -1,0 +1,34 @@
+package com.akihabara.market.util;
+
+import java.util.Scanner;
+
+public class InputUtils {
+    private static final Scanner scanner = new Scanner(System.in);
+
+    public static int leerEntero(String mensaje) {
+        while (true) {
+            System.out.print(mensaje);
+            try {
+                return Integer.parseInt(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Número entero no válido. Intente nuevamente.");
+            }
+        }
+    }
+
+    public static double leerDouble(String mensaje) {
+        while (true) {
+            System.out.print(mensaje);
+            try {
+                return Double.parseDouble(scanner.nextLine());
+            } catch (NumberFormatException e) {
+                System.out.println("Número decimal no válido. Intente nuevamente.");
+            }
+        }
+    }
+
+    public static String leerCadena(String mensaje) {
+        System.out.print(mensaje);
+        return scanner.nextLine();
+    }
+}

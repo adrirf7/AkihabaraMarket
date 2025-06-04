@@ -69,6 +69,7 @@ public class ProductoDAO {
     		
     		while (rs.next()) {
     			productos.add(new ProductoOtaku(
+    					rs.getInt("id"),
     					rs.getString("nombre"),
     					rs.getString("categoria"),
     					rs.getDouble("precio"),
@@ -93,6 +94,7 @@ public class ProductoDAO {
     		pstmt.setInt(5, producto.getId());
     		
     		int filas = pstmt.executeUpdate();
+    		System.out.println("Producto actualizado con exito");
     		return filas >0;
     		
     		
@@ -111,6 +113,7 @@ public class ProductoDAO {
     		pstmt.setInt(1, id);
     		
     		int filas = pstmt.executeUpdate();
+    		System.out.println("Producto Eliminado con exito");
     		return filas>0;
     		
     	} catch(SQLException e) {
@@ -132,6 +135,7 @@ public class ProductoDAO {
     		
     		while (rs.next()) {
     			producto.add(new ProductoOtaku(
+    					rs.getInt("id"),
     					rs.getString("nombre"),
     					rs.getString("categoria"),
     					rs.getDouble("precio"),
@@ -157,6 +161,7 @@ public class ProductoDAO {
     		
     		while (rs.next()) {
     			producto.add(new ProductoOtaku(
+    					rs.getInt("id"),
     					rs.getString("nombre"),
     					rs.getString("categoria"),
     					rs.getDouble("precio"),

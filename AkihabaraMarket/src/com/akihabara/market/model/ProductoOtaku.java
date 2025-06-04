@@ -33,6 +33,9 @@ public class ProductoOtaku {
 		return id;
 	}
 	
+	public void setId(int id) {
+		this.id=id;
+	}
 	public String getNombre() {
 		return nombre;
 	}
@@ -70,6 +73,7 @@ public class ProductoOtaku {
     public String toString() {
         return "------------------------------" +
         		"\nProductoOtaku:" +
+        		"\nID = " + id +
                 "\nNombre = " + nombre +
                 "\nCategoría = " + categoria +
                 "\nPrecio = " + precio +
