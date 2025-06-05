@@ -1,0 +1,15 @@
+package com.akihabara.market.main;
+import javax.swing.SwingUtilities;
+
+import com.akihabara.market.controller.AkihabaraController;
+import com.akihabara.market.view.InventarioGUI;
+
+public class Main {
+
+    // Punto de entrada de la aplicación (main)
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(InventarioGUI::new);  // Crea la interfaz en el hilo de la GUI
+    }
+    
+
+}

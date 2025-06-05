@@ -1,0 +1,68 @@
+package com.akihabara.market.controller;
+
+import com.akihabara.market.dao.ProductoDAO;
+import com.akihabara.market.model.ProductoOtaku;
+
+import java.util.List;
+
+public class ProductoController {
+
+    private final ProductoDAO dao;
+
+    public ProductoController() {
+        this.dao = new ProductoDAO();
+    }
+
+    // Agregar un nuevo producto
+    public boolean agregarProducto(String nombre, String categoria, double precio, int stock) {
+        try {
+            ProductoOtaku producto = new ProductoOtaku(nombre, categoria, precio, stock);
+            dao.agregarProducto(producto);
+            return true;
+        } catch (Exception e) {
+            System.err.println("Error en agregarProducto: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // Actualizar un producto existente
+    public boolean actualizarProducto(int id, String nombre, String categoria, double precio, int stock) {
+        try {
+            ProductoOtaku producto = new ProductoOtaku(id, nombre, categoria, precio, stock);
+            return dao.actualizarProducto(producto);
+        } catch (Exception e) {
+            System.err.println("Error en actualizarProducto: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // Eliminar un producto por ID
+    public boolean eliminarProducto(int id) {
+        try {
+            return dao.eliminarProducto(id);
+        } catch (Exception e) {
+            System.err.println("Error en eliminarProducto: " + e.getMessage());
+            return false;
+        }
+    }
+
+    // Obtener todos los productos
+    public List<ProductoOtaku> listarProductos() {
+        return dao.obtenerTodosLosProductos();
+    }
+
+    // Buscar producto por ID
+    public ProductoOtaku buscarPorId(int id) {
+        return dao.obtenerProductoPorId(id);
+    }
+
+    // Buscar por nombre (LIKE)
+    public List<ProductoOtaku> buscarPorNombre(String nombre) {
+        return dao.buscarProductosPorNombre(nombre);
+    }
+
+    // Buscar por categoría (LIKE)
+    public List<ProductoOtaku> buscarPorCategoria(String categoria) {
+        return dao.buscarProductoPorCategoria(categoria);
+    }
+}

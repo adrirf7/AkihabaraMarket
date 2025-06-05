@@ -69,7 +69,6 @@ public class ProductoOtaku {
     }
     
     //Metodo toString sobreescrito
-    @Override
     public String toString() {
         return "------------------------------" +
         		"\nProductoOtaku:" +

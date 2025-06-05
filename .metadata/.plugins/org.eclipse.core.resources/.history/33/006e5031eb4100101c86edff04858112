@@ -1,0 +1,5 @@
+package com.akihabara.market.controller;
+
+public class ProductoController {
+
+}

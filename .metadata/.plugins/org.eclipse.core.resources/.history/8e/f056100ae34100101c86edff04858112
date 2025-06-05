@@ -1,0 +1,24 @@
+package com.akihabara.market.view;
+import com.akihabara.market.model.ProductoOtaku;
+import com.akihabara.market.dao.ProductoDAO;
+
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.List;
+
+public class InventarioGUI extends JFrame {
+	//DAO para interactuar con la DB
+	private ProductoDAO productoDAO;
+	
+	//Componentes de la interfaz
+	private JTable tablaProdctos;
+	private DefaultTableModel modeloTabla;
+    private JTextField txtNombre, txtCategoria, txtPrecio, txtStock;
+    private JButton btnAgregar, btnActualizar, btnEliminar, btnLimpiar;
+    
+    // Guarda el índice del producto seleccionado en la tabla
+    private int productoSeleccionado =-1;
+}

@@ -1,0 +1,215 @@
+package com.akihabara.market.view;
+import com.akihabara.market.model.ProductoOtaku;
+import com.akihabara.market.dao.ProductoDAO;
+
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.List;
+
+public class InventarioGUI extends JFrame {
+	//DAO para interactuar con la DB
+	private ProductoDAO productoDAO;
+	
+	//Componentes de la interfaz
+	private JTable tablaProductos;
+	private DefaultTableModel modeloTabla;
+    private JTextField txtNombre, txtCategoria, txtPrecio, txtStock;
+    private JButton btnAgregar, btnActualizar, btnEliminar, btnLimpiar;
+    
+    // Guarda el índice del producto seleccionado en la tabla
+    private int productoSeleccionado =-1;
+    
+    public InventarioGUI() {
+    	productoDAO = new ProductoDAO();
+    	inicializarComponentes();
+    	cargarProductosEnTabla();
+    	
+    	setTitle("Gestion de Inventario Otaku");
+    	setSize(800, 400);
+    	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);  // centrar en pantalla
+        setVisible(true);
+    }
+    
+    private void inicializarComponentes() {
+    	JPanel panelFormulario = new JPanel(new GridLayout(5, 2, 10, 10));
+    	panelFormulario.setBorder(BorderFactory.createTitledBorder("Datos del Producto"));
+    	
+    	//Campos de texto
+        txtNombre = new JTextField();
+        txtCategoria = new JTextField();
+        txtPrecio = new JTextField();
+        txtStock = new JTextField();
+        
+        // Etiquetas y campos al panel
+        panelFormulario.add(new JLabel("Nombre:"));
+        panelFormulario.add(txtNombre);
+        panelFormulario.add(new JLabel("Categoría:"));
+        panelFormulario.add(txtCategoria);
+        panelFormulario.add(new JLabel("Precio:"));
+        panelFormulario.add(txtPrecio);
+        panelFormulario.add(new JLabel("Stock:"));
+        panelFormulario.add(txtStock);
+        
+        // Botones de acción
+        btnAgregar = new JButton("Agregar");
+        btnActualizar = new JButton("Actualizar");
+        btnEliminar = new JButton("Eliminar");
+        btnLimpiar = new JButton("Limpiar");
+        
+        // Panel para los botones
+        JPanel panelBotones = new JPanel(new FlowLayout());
+        panelBotones.add(btnAgregar);
+        panelBotones.add(btnActualizar);
+        panelBotones.add(btnEliminar);
+        panelBotones.add(btnLimpiar);
+        
+        //Configuramos la tabla
+        String[] columnas = {"ID", "Nombre", "Categoría", "Precio", "Stock"};
+        modeloTabla = new DefaultTableModel(columnas, 0); //Modelo vacio
+        tablaProductos = new JTable(modeloTabla);
+        JScrollPane scrollPane = new JScrollPane(tablaProductos);
+        
+        //Asignar acciones a los botones
+        btnAgregar.addActionListener(e -> agregarProducto());
+        btnActualizar.addActionListener(e -> actualizarProducto());
+        btnEliminar.addActionListener(e -> eliminarProducto());
+        btnLimpiar.addActionListener(e -> limpiarFormulario());
+        
+        //Listener para detectar cuando el usuario selecciona una fila de la tabla
+        tablaProductos.getSelectionModel().addListSelectionListener(e -> {
+        	if (!e.getValueIsAdjusting()) {
+        		productoSeleccionado = tablaProductos.getSelectedRow();
+        		if (productoSeleccionado != -1) {
+        			cargarProductoEnFormulario(productoSeleccionado);
+        		}
+        	}
+        });
+        
+        //Layout general de la ventana
+        setLayout(new BorderLayout());
+        add(panelFormulario, BorderLayout.NORTH);
+        add(panelBotones, BorderLayout.CENTER);
+        add(scrollPane, BorderLayout.SOUTH);
+    }
+    
+    private void agregarProducto() {
+    	try {
+    		//Recuperar los datos ingresados
+    		String nombre = txtNombre.getText().trim();
+    		String categoria = txtCategoria.getText().trim();
+    		double precio = Double.parseDouble(txtPrecio.getText());
+    		int stock = Integer.parseInt(txtStock.getText());
+    		
+    		//Crear y guardar el producto
+    		productoOtaku producto = new ProductoOtaku(nombre, categoria, precio, stock);
+    		productoDAO.agregarProducto(producto);
+    		
+    		//Actualizar la tabla y limpiar el fomulario
+    		cargarProductosEnTabla();
+    		limpiarFormulario();
+    		
+    	} catch(Exception e) {
+    		mostrarError("Error al agregar producto: "+ e.getMessage());
+    	}
+    }
+    
+    private void actualizarProducto() {
+    	if (productoSeleccionado == -1) {
+    		mostrarError("Selecciona un producto para actualizar");
+    		return;
+    	}
+    	
+    	try {
+    		//Obtenemos el ID desde la tabla
+    		int id = Integer.parseInt(tablaProductos.getValueAt(productoSeleccionado, 0).toString());
+    		
+    		//Recuperamos los nuevos valores
+    		String nombre = txtNombre.getText().trim();
+    		String categoria = txtCategoria.getText().trim();
+    		double precio = Double.parseDouble(txtPrecio.getText());
+    		int stock = Integer.parseInt(txtStock.getText());
+    		
+    		//Crear un nuevo objeto
+    		ProductoOtaku producto = new ProductoOtaku(id, nombre, categoria, precio, stock);
+    		productoDAO.actualizarProducto(producto);
+    		
+    		//Actualizar la tabla y limpiar el fomulario
+    		cargarProductosEnTabla();
+    		limpiarFormulario();
+    		
+    	} catch(Exception e) {
+    		mostrarError("Error al agregar producto: "+ e.getMessage());
+    	}
+    }
+    
+    private void eliminarProducto() {
+    	if (productoSeleccionado ==-1) {
+    		mostrarError("Selecciona un producto para actualizar");
+    		return;
+    	}
+    	
+    	//Confrimacion para elimianr
+    	int confirm = JOptionPane.showConfirmDialog(this,
+                "¿Está seguro de eliminar este producto?",
+                "Confirmar eliminación", JOptionPane.YES_NO_OPTION);
+    	
+    	if(confirm == JOptionPane.YES_OPTION) {
+    		int id = Integer.parseInt(tablaProductos.getValueAt(productoSeleccionado, 0).toString());
+    		productoDAO.eliminarProducto(id);
+    		
+    		//Actualizar la tabla y limpiar el fomulario
+    		cargarProductosEnTabla();
+    		limpiarFormulario();
+    	}
+    }
+    
+    // Carga todos los productos en la tabla
+    private void cargarProductosEnTabla() {
+    	modeloTabla.setRowCount(0); //Limpiar la tabla
+        List<ProductoOtaku> productos = productoDAO.obtenerTodosLosProductos();
+        
+        // Añadimos cada producto como fila en la tabla
+        for (ProductoOtaku p : productos) {
+            modeloTabla.addRow(new Object[]{
+                    p.getId(),
+                    p.getNombre(),
+                    p.getCategoria(),
+                    p.getPrecio(),
+                    p.getStock()
+            });
+        }
+    }
+    
+    // Llena el formulario con los datos del producto seleccionado
+    private void cargarProductoEnFormulario(int fila) {
+        txtNombre.setText(tablaProductos.getValueAt(fila, 1).toString());
+        txtCategoria.setText(tablaProductos.getValueAt(fila, 2).toString());
+        txtPrecio.setText(tablaProductos.getValueAt(fila, 3).toString());
+        txtStock.setText(tablaProductos.getValueAt(fila, 4).toString());
+    }
+    
+    // Limpia el formulario y resetea la selección
+    private void limpiarFormulario() {
+        txtNombre.setText("");
+        txtCategoria.setText("");
+        txtPrecio.setText("");
+        txtStock.setText("");
+        tablaProductos.clearSelection();
+        productoSeleccionado = -1;
+    }
+    
+    // Muestra un mensaje de error
+    private void mostrarError(String mensaje) {
+        JOptionPane.showMessageDialog(this, mensaje, "Error", JOptionPane.ERROR_MESSAGE);
+    }
+    
+    // Punto de entrada de la aplicación (main)
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(InventarioGUI::new);  // Crea la interfaz en el hilo de la GUI
+    }
+    
+}

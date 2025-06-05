@@ -1,0 +1,17 @@
+package com.akihabara.market.main;
+import javax.swing.SwingUtilities;
+
+import com.akihabara.market.controller.AkihabaraController;
+import com.akihabara.market.view.InventarioGUI;
+
+public class Main {
+    public static void main(String[] args) {
+        SwingUtilities.invokeLater(() -> {
+            InventarioGUI gui = new InventarioGUI();
+            new InventarioController(gui);
+            gui.setVisible(true);
+        });
+    }
+    
+
+}

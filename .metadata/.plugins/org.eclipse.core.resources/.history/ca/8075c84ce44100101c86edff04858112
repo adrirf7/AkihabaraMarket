@@ -1,0 +1,80 @@
+package com.akihabara.market.view;
+import com.akihabara.market.model.ProductoOtaku;
+import com.akihabara.market.dao.ProductoDAO;
+
+
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
+import java.awt.event.*;
+import java.util.List;
+
+public class InventarioGUI extends JFrame {
+	//DAO para interactuar con la DB
+	private ProductoDAO productoDAO;
+	
+	//Componentes de la interfaz
+	private JTable tablaProductos;
+	private DefaultTableModel modeloTabla;
+    private JTextField txtNombre, txtCategoria, txtPrecio, txtStock;
+    private JButton btnAgregar, btnActualizar, btnEliminar, btnLimpiar;
+    
+    // Guarda el índice del producto seleccionado en la tabla
+    private int productoSeleccionado =-1;
+    
+    public InventarioGUI() {
+    	productoDAO = new ProductoDAO();
+    	inicializarComponentes();
+    	cargarProductosEnTabla();
+    	
+    	setTitle("Gestion de Inventario Otaku");
+    	setSize(800, 400);
+    	setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLocationRelativeTo(null);  // centrar en pantalla
+        setVisible(true);
+    }
+    
+    private void inicializarComponentes() {
+    	JPanel panelFormulario = new JPanel(new GridLayout(5, 2, 10, 10));
+    	panelFormulario.setBorder(BorderFactory.createTitledBorder("Datos del Producto"));
+    	
+    	//Campos de texto
+        txtNombre = new JTextField();
+        txtCategoria = new JTextField();
+        txtPrecio = new JTextField();
+        txtStock = new JTextField();
+        
+        // Etiquetas y campos al panel
+        panelFormulario.add(new JLabel("Nombre:"));
+        panelFormulario.add(txtNombre);
+        panelFormulario.add(new JLabel("Categoría:"));
+        panelFormulario.add(txtCategoria);
+        panelFormulario.add(new JLabel("Precio:"));
+        panelFormulario.add(txtPrecio);
+        panelFormulario.add(new JLabel("Stock:"));
+        panelFormulario.add(txtStock);
+        
+        // Botones de acción
+        btnAgregar = new JButton("Agregar");
+        btnActualizar = new JButton("Actualizar");
+        btnEliminar = new JButton("Eliminar");
+        btnLimpiar = new JButton("Limpiar");
+        
+        // Panel para los botones
+        JPanel panelBotones = new JPanel(new FlowLayout());
+        panelBotones.add(btnAgregar);
+        panelBotones.add(btnActualizar);
+        panelBotones.add(btnEliminar);
+        panelBotones.add(btnLimpiar);
+        
+        //Configuramos la tabla
+        String[] columnas = {"ID", "Nombre", "Categoría", "Precio", "Stock"};
+        modeloTabla = new DefaultTableModel(columnas, 0); //Modelo vacio
+        tablaProductos = new JTable(modeloTabla);
+        JScrollPane ScrollPane = new JScrollPane(tablaProductos);
+        
+        //Asignar acciones a los botones
+        btnAgregar.addActionListener(e->agregarProducto());
+
+    }
+}
