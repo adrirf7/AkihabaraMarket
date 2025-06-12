@@ -1,5 +1,0 @@
-package com.akihabara.market.dao;
-
-public class DatabaseConnection {
-
-}

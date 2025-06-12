@@ -1,2 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<qualifiedTypeNameHistroy/>
+<qualifiedTypeNameHistroy>
+    <fullyQualifiedTypeName name="javax.swing.JOptionPane"/>
+    <fullyQualifiedTypeName name="com.akihabara.market.view.InventarioGUI"/>
+    <fullyQualifiedTypeName name="com.akihabara.market.controller.ProductoController"/>
+</qualifiedTypeNameHistroy>

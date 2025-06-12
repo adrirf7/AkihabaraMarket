@@ -1,6 +1,0 @@
-package com.akihabara.market.controller;
-import com.akihabara.market.view.InventarioGUI;
-public class GuiController {
-    private final InventarioGUI vista;
-    private final ProductoController productoController;
-}
