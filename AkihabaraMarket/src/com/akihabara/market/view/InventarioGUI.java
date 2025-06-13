@@ -9,6 +9,7 @@ public class InventarioGUI extends JFrame {
     private JTextField txtId, txtNombre, txtCategoria, txtPrecio, txtStock;
     private JButton btnAgregar, btnActualizar, btnEliminar, btnLimpiar;
     private JTable tablaProductos;
+    private JButton btnSugerirNombre; //boton para sugerir un nombre con la IA
 
     public InventarioGUI() {
         setTitle("Inventario Otaku");
@@ -30,10 +31,16 @@ public class InventarioGUI extends JFrame {
         txtPrecio = new JTextField();
         txtStock = new JTextField();
 
+        // Crear panel para el campo "Nombre" + botón delante
+        JPanel panelNombreConBoton = new JPanel(new BorderLayout(5, 0));
+        btnSugerirNombre = new JButton("Sugerir");
+        panelNombreConBoton.add(btnSugerirNombre, BorderLayout.WEST);
+        panelNombreConBoton.add(txtNombre, BorderLayout.CENTER);
+        
         panelFormulario.add(new JLabel("ID:"));
         panelFormulario.add(txtId);
         panelFormulario.add(new JLabel("Nombre:"));
-        panelFormulario.add(txtNombre);
+        panelFormulario.add(panelNombreConBoton);
         panelFormulario.add(new JLabel("Categoría:"));
         panelFormulario.add(txtCategoria);
         panelFormulario.add(new JLabel("Precio:"));
@@ -85,5 +92,6 @@ public class InventarioGUI extends JFrame {
     public JButton getBtnActualizar() { return btnActualizar; }
     public JButton getBtnEliminar() { return btnEliminar; }
     public JButton getBtnLimpiar() { return btnLimpiar; }
+    public JButton getBtnSugerirNombre() { return btnSugerirNombre; }
     public JTable getTablaProductos() { return tablaProductos; }
 }

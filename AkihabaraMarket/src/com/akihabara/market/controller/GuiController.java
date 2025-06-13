@@ -7,10 +7,13 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.*;
 import java.util.List;
+import com.akihabara.market.llm.LlmService;
+
 
 public class GuiController {
     private final InventarioGUI vista;
     private final ProductoController productoController;
+    private final LlmService llmService = new LlmService();
 
     public GuiController(InventarioGUI vista) {
         this.vista = vista;
@@ -26,6 +29,8 @@ public class GuiController {
         vista.getBtnActualizar().addActionListener(e -> actualizarProducto());
         vista.getBtnEliminar().addActionListener(e -> eliminarProducto());
         vista.getBtnLimpiar().addActionListener(e -> limpiarFormulario());
+     // Botón que sugiere un nombre usando LlmService
+        vista.getBtnSugerirNombre().addActionListener(e -> sugerirNombre());
 
         // Listener para cuando el usuario selecciona una fila en la tabla,
         // se carga el producto seleccionado en el formulario para su edición
@@ -112,6 +117,48 @@ public class GuiController {
             }
         }
     }
+    
+    private void sugerirNombre() {
+        String categoria = vista.getTxtCategoria().getText().trim();
+
+        if (categoria.isEmpty()) {
+            mostrarError("Por favor, introduce una categoría antes de sugerir un nombre.");
+            return;
+        }
+
+        // Supone que la categoría es algo como "figura de Naruto", o "peluche Pokémon"
+        String tipo = "";
+        String franquicia = "";
+
+        // Separación simple: busca la palabra "de" o usa la última palabra como franquicia
+        if (categoria.contains(" de ")) {
+            String[] partes = categoria.split(" de ", 2);
+            tipo = partes[0].trim();
+            franquicia = partes[1].trim();
+        } else {
+            // Separación más simple (última palabra como franquicia)
+            String[] palabras = categoria.split(" ");
+            if (palabras.length >= 2) {
+                tipo = String.join(" ", java.util.Arrays.copyOf(palabras, palabras.length - 1)).trim();
+                franquicia = palabras[palabras.length - 1].trim();
+            } else {
+                tipo = categoria;
+                franquicia = "anime"; // fallback
+            }
+        }
+
+        try {
+            String nombreSugerido = llmService.sugerirNombreProducto(tipo, franquicia);
+            if (nombreSugerido != null && !nombreSugerido.isBlank()) {
+                vista.getTxtNombre().setText(nombreSugerido);
+            } else {
+                mostrarError("No se recibió una sugerencia válida.");
+            }
+        } catch (Exception e) {
+            mostrarError("Error al generar el nombre: " + e.getMessage());
+        }
+    }
+
 
     // Carga todos los productos desde el modelo y actualiza la tabla de la vista
     private void cargarProductosEnTabla() {
