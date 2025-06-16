@@ -1,4 +1,5 @@
 package com.akihabara.market.dao;
+
 import com.akihabara.market.model.ProductoOtaku;
 import java.sql.*;
 import java.util.ArrayList;
@@ -16,17 +17,16 @@ public class ProductoDAO {
     public void agregarProducto(ProductoOtaku producto) {
         String consulta = "INSERT INTO producto(nombre, categoria, precio, stock) VALUES (?, ?, ?, ?)";
 
-        // Establece conexión y prepara la consulta dentro de try-with-resources para cerrar recursos automáticamente
+        // try-with-resources asegura cierre automático de recursos (conexión y statement)
         try (Connection con = dbConnection.getConexion();
              PreparedStatement pstmt = con.prepareStatement(consulta)) {
 
-            // Asigna los valores del objeto producto a los parámetros de la consulta SQL
+            // Mapea los campos del producto a los parámetros del SQL
             pstmt.setString(1, producto.getNombre());
             pstmt.setString(2, producto.getCategoria());
             pstmt.setDouble(3, producto.getPrecio());
             pstmt.setInt(4, producto.getStock());
 
-            // Ejecuta la inserción
             pstmt.executeUpdate();
             System.out.println("Producto agregado correctamente.");
 
@@ -45,7 +45,7 @@ public class ProductoDAO {
             pstmt.setInt(1, id);
             ResultSet rs = pstmt.executeQuery();
 
-            // Si se encuentra el producto, crea y devuelve el objeto ProductoOtaku con los datos recuperados
+            // Solo entra si encuentra coincidencia exacta con el ID
             if (rs.next()) {
                 return new ProductoOtaku(
                     rs.getInt("id"),
@@ -70,7 +70,7 @@ public class ProductoDAO {
              PreparedStatement pstmt = con.prepareStatement(consulta);
              ResultSet rs = pstmt.executeQuery()) {
 
-            // Itera sobre los resultados, crea objetos ProductoOtaku y los añade a la lista
+            // Crea un objeto por cada fila y lo añade a la lista
             while (rs.next()) {
                 productos.add(new ProductoOtaku(
                     rs.getInt("id"),
@@ -93,15 +93,14 @@ public class ProductoDAO {
         try (Connection con = dbConnection.getConexion();
              PreparedStatement pstmt = con.prepareStatement(consulta)) {
 
-            // Asigna los nuevos valores y el ID del producto que se quiere actualizar
+            // Asegura que el ID del producto se usa para localizarlo y el resto para actualizarlo
             pstmt.setString(1, producto.getNombre());
             pstmt.setString(2, producto.getCategoria());
             pstmt.setDouble(3, producto.getPrecio());
             pstmt.setInt(4, producto.getStock());
             pstmt.setInt(5, producto.getId());
 
-            // Ejecuta el update y devuelve true si se modificó alguna fila
-            int filas = pstmt.executeUpdate();
+            int filas = pstmt.executeUpdate();  // filas > 0 indica éxito
             System.out.println("Producto actualizado con éxito");
             return filas > 0;
 
@@ -120,8 +119,7 @@ public class ProductoDAO {
 
             pstmt.setInt(1, id);
 
-            // Ejecuta la eliminación y verifica si se eliminó al menos una fila
-            int filas = pstmt.executeUpdate();
+            int filas = pstmt.executeUpdate();  // Elimina si filas > 0
             System.out.println("Producto eliminado con éxito");
             return filas > 0;
 
@@ -139,7 +137,7 @@ public class ProductoDAO {
         try (Connection con = dbConnection.getConexion();
              PreparedStatement pstmt = con.prepareStatement(consulta)) {
 
-            // El comodín % permite buscar nombres que contengan el texto en cualquier posición
+            // % permite coincidencias parciales antes y después del texto
             pstmt.setString(1, "%" + nombre + "%");
             ResultSet rs = pstmt.executeQuery();
 
